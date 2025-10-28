@@ -66,6 +66,10 @@ export default function FieldTemplate<
     return <div className='rjsf-field-hidden'>{children}</div>;
   }
 
+  // override，隐藏 数组类型的 description
+  const _hideDescription = schema.type === 'array' || schema.type === 'object';
+
+
   // check to see if there is rawDescription(string) before using description(ReactNode)
   // to prevent showing a blank description area
   const descriptionNode = rawDescription ? description : undefined;
@@ -76,7 +80,9 @@ export default function FieldTemplate<
       break;
     case 'below':
     default:
-      descriptionProps.extra = descriptionNode;
+      // descriptionProps.extra = descriptionNode;
+      descriptionProps.extra = _hideDescription ? undefined : descriptionNode;
+
       break;
   }
 

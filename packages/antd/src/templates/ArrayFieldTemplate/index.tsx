@@ -40,6 +40,8 @@ export default function ArrayFieldTemplate<
     title,
     uiSchema,
   } = props;
+  const _canAdd = canAdd && !disabled && !readonly;
+
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
@@ -69,7 +71,7 @@ export default function ArrayFieldTemplate<
   );
 
   return (
-    <fieldset className={className} id={fieldPathId.$id}>
+    <fieldset className={className} id={fieldPathId.$id} style={{ padding: 8, border: '1px solid #e2e8f0', borderRadius: "6px"}}>
       <Row gutter={rowGutter}>
         {(uiOptions.title || title) && (
           <Col className={labelColClassName} span={24}>
@@ -99,12 +101,29 @@ export default function ArrayFieldTemplate<
           {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
           {items}
         </Col>
-        {canAdd && (
+        {/* {canAdd && (
           <Col span={24}>
             <Row gutter={rowGutter} justify='end'>
               <Col flex='192px'>
                 <AddButton
                   id={buttonId(fieldPathId, 'add')}
+                  className='rjsf-array-item-add'
+                  disabled={disabled || readonly}
+                  onClick={onAddClick}
+                  uiSchema={uiSchema}
+                  registry={registry}
+                />
+              </Col>
+            </Row>
+          </Col>
+        )} */}
+        {/* override canAdd */}
+        {_canAdd && (
+          <Col span={24}>
+            <Row gutter={rowGutter} justify='end'>
+              <Col flex='100px'>
+                <AddButton
+                  id={buttonId<T>(idSchema, 'add')}
                   className='rjsf-array-item-add'
                   disabled={disabled || readonly}
                   onClick={onAddClick}

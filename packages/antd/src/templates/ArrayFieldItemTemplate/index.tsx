@@ -34,15 +34,21 @@ export default function ArrayFieldItemTemplate<
   );
   const { rowGutter = 24, toolbarAlign = 'top' } = registry.formContext;
 
+  const _hasToolbar = hasToolbar && (!props.disabled && !props.readonly);
   return (
-    <Row align={toolbarAlign} key={`rjsf-array-item-${index}`} gutter={rowGutter}>
+    <Row align={toolbarAlign} key={`rjsf-array-item-${index}`} gutter={rowGutter} style={{position: 'relative', border: '1px solid #e2e8f0', margin: "8px", borderRadius: "6px"}}>
       <Col flex='1'>{children}</Col>
 
-      {hasToolbar && (
+      {/* {hasToolbar && (
         <Col flex='192px'>
           <Space.Compact style={BTN_GRP_STYLE}>
             <ArrayFieldItemButtonsTemplate {...buttonsProps} style={BTN_STYLE} />
           </Space.Compact>
+        </Col>
+      )} */}
+      {_hasToolbar && (
+        <Col style={{position: 'absolute', top: 5, right: 5, display: 'flex', gap: '5px'}}>
+            <ArrayFieldItemButtonsTemplate {...buttonsProps} style={BTN_STYLE} />
         </Col>
       )}
     </Row>

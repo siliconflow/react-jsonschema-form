@@ -56,6 +56,10 @@ export default function BaseInputTemplate<
 
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
+  // override
+  // @ts-ignore
+  const { type: _inputType, ...restProps } = inputProps;
+
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (
       <InputNumber
@@ -68,7 +72,8 @@ export default function BaseInputTemplate<
         placeholder={placeholder}
         style={INPUT_STYLE}
         list={schema.examples ? examplesId(id) : undefined}
-        {...inputProps}
+        // {...inputProps}
+        {...restProps}
         value={value}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />

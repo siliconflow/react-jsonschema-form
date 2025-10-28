@@ -104,7 +104,7 @@ export default function WrapIfAdditionalTemplate<
         <Col className='form-additional' flex='1'>
           {children}
         </Col>
-        <Col flex='192px'>
+        <Col flex='100px'>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'

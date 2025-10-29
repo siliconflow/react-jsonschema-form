@@ -16,7 +16,7 @@ import enumOptionsValueForIndex from './enumOptionsValueForIndex';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder';
 import findSchemaDefinition from './findSchemaDefinition';
 import getChangedFields from './getChangedFields';
-import getDateElementProps, { type DateElementFormat } from './getDateElementProps';
+import getDateElementProps, { DateElementFormat, DateElementProp } from './getDateElementProps';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getInputProps from './getInputProps';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator';
@@ -59,7 +59,7 @@ import parseDateString from './parseDateString';
 import rangeSpec from './rangeSpec';
 import replaceStringParameters from './replaceStringParameters';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue';
-import shouldRender from './shouldRender';
+import shouldRender, { ComponentUpdateStrategy } from './shouldRender';
 import shouldRenderOptionalField from './shouldRenderOptionalField';
 import toConstant from './toConstant';
 import toDateString from './toDateString';
@@ -67,7 +67,9 @@ import toErrorList from './toErrorList';
 import toErrorSchema from './toErrorSchema';
 import toFieldPathId from './toFieldPathId';
 import unwrapErrorHandler from './unwrapErrorHandler';
+import useAltDateWidgetProps, { DateElement, DateElementProps, UseAltDateWidgetResult } from './useAltDateWidgetProps';
 import useDeepCompareMemo from './useDeepCompareMemo';
+import useFileWidgetProps, { FileInfoType, UseFileWidgetPropsResult } from './useFileWidgetProps';
 import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
 import withIdRefPrefix from './withIdRefPrefix';
@@ -80,6 +82,16 @@ export * from './constants';
 export * from './parser';
 export * from './schema';
 
+export type {
+  ComponentUpdateStrategy,
+  DateElementFormat,
+  DateElementProp,
+  DateElementProps,
+  FileInfoType,
+  UseAltDateWidgetResult,
+  UseFileWidgetPropsResult,
+};
+
 export {
   allowAdditionalItems,
   ariaDescribedByIds,
@@ -88,7 +100,7 @@ export {
   canExpand,
   createErrorHandler,
   createSchemaUtils,
-  DateElementFormat,
+  DateElement,
   dataURItoBlob,
   dateRangeOptions,
   deepEquals,
@@ -152,12 +164,12 @@ export {
   toErrorSchema,
   toFieldPathId,
   unwrapErrorHandler,
+  useAltDateWidgetProps,
   useDeepCompareMemo,
+  useFileWidgetProps,
   utcToLocal,
   validationDataMerge,
   withIdRefPrefix,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };
-
-export type { ComponentUpdateStrategy } from './shouldRender';

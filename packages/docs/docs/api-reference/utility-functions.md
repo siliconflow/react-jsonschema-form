@@ -1034,6 +1034,21 @@ Unwraps the `errorHandler` structure into the associated `ErrorSchema`, strippin
 
 - ErrorSchema&lt;T>: The `ErrorSchema` resulting from the stripping of the `addError()` function
 
+### useAltDateWidgetProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;`()
+
+Hook which encapsulates the logic needed to render an `AltDateWidget` with optional `time` elements. It contains
+the `state` of the current date(/time) selections in the widget. It returns a `UseAltDateWidgetResult` object
+that contains the `elements: DateElementProp[]` and three callbacks needed to change one of the rendered `elements`,
+and to handle the clicking of the `clear` and `setNow` buttons.
+
+#### Parameters
+
+- props: WidgetProps&lt;T, S, F> - The `WidgetProps` for the `AltDateWidget`
+
+#### Returns
+
+- UseAltDateWidgetResult: The `UseAltDateWidgetResult` to be used within a `AltDateWidget` implementation
+
 ### useDeepCompareMemo&lt;T = unknown>()
 
 Hook that stores and returns a `T`. If `newValue` is the same as the stored one, then the stored one is returned to
@@ -1046,6 +1061,22 @@ avoid having a component rerender due it being a different object. Otherwise, th
 #### Returns
 
 - T: The latest stored `T` value
+
+### useFileWidgetProps()
+
+Hook which encapsulates the logic needed to read and convert a `value` of `File` or `File[]` into the
+`filesInfo: FileInfoType[]` and the two callback implementations needed to change the list or to remove a
+`File` from the list. To be used by theme specific `FileWidget` implementations.
+
+#### Parameters
+
+- value: string | string[] | undefined | null - The current value of the `FileWidget`
+- onChange: (value: string | null | (string | null)[]) => void - The onChange handler for the `FileWidget`
+- [multiple=false] - Flag indicating whether the control supports multiple selections
+
+#### Returns
+
+- UseFileWidgetPropsResult: The `UseFileWidgetPropsResult` to be used within a `FileWidget` implementation
 
 ### utcToLocal()
 

@@ -15,6 +15,88 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.2
+
+## @rjsf/antd
+
+- Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+- Updated `ArrayFieldTemplate` and `ObjectFieldTemplate` to remove the rendering of a duplicate description (since the `FieldTemplate` already does it), fixing [#3624](https://github.com/rjsf-team/react-jsonschema-form/issues/3624)
+
+## @rjsf/chakra-ui
+
+- Modified `CheckboxesWidget` to render the Title, fixing ([#4840](https://github.com/rjsf-team/react-jsonschema-form/issues/4840))
+- Updated `CheckboxWidget` to handle label and description rendering consistently, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+
+## @rjsf/core
+
+- Fixed duplicate label and description rendering in `CheckboxWidget` by conditionally rendering them based on widget type
+    - Updated `CheckboxWidget` to handle label and description rendering consistently
+    - Modified `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+
+## @rjsf/fluentui-rc
+
+- Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+
+## @rjsf/mantine
+
+- Updated `CheckboxWidget` to handle label and description rendering consistently, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+
+## @rjsf/mui
+
+- Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+
+## @rjsf/primereact
+
+- Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+
+## @rjsf/react-bootstrap
+
+- Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+
+## @rjsf/semantic-ui
+
+- Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+
+## @rjsf/shadcn
+
+- Updated `FieldTemplate` to skip label and description rendering for checkbox widgets, fixing ([#4742](https://github.com/rjsf-team/react-jsonschema-form/issues/4742))
+
+## @rjsf/utils
+
+- Updated `getDefaultFormState()` to not save an undefined field value into an object when the type is `null` and `excludeObjectChildren` is provided, fixing [#4821](https://github.com/rjsf-team/react-jsonschema-form/issues/4821)
+
+## Dev / docs / playground
+
+- Updated the `OptionsDrawer` of the playground to add `idPrefix` and `idSeparator` fields
+
+# 6.0.1
+
+## Dev / docs / playground
+
+- Updated peer dependencies for packages to `6.x`
+
+# 6.0.0
+
+## @rjsf/antd
+
+- Updated the `README.md` to show the theme snapshot with the latest theme UI from the playground, making it a link to the theme
+
+## @rjsf/chakra-ui
+
+- Updated the `README.md` to show the theme snapshot with the latest theme UI from the playground, making it a link to the theme
+
+## @rjsf/core
+
+- Updated `SchemaField` to add a new optional property `childFieldPathId` to the `FieldComponent` render to prevent duplicate ids, fixing (#4819)[https://github.com/rjsf-team/react-jsonschema-form/issues/4819]
+    - Also updated `ObjectField` and `ArrayField` to make children use the `childFieldPathId` if present, falling back to the `fieldPathId` if not
+
+## Dev / docs / playground
+
+- Updated the libraries to the latest ones that aren't problematic
+  Updated the playground to modernize the UI using MUI components
+- Updated the documentation to switch to using an animated gif based on the latest modernized playground UI
+- Updated the `README.md` in all themes to show the theme snapshot with the latest theme UI from the playground, making it a link to the theme
+
 # 6.0.0-beta.23
 
 ## @rjsf/antd

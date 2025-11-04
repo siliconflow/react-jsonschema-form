@@ -44,9 +44,11 @@ export function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     registry: { translateString },
   } = props;
   return (
+    // [CUSTOM]: 自定义样式
     <IconButton
       title={translateString(TranslatableString.AddItemButton)}
-      iconType='primary'
+      // iconType='primary'
+      iconType='default'
       block
       {...props}
       icon={<PlusCircleOutlined />}

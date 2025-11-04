@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { Col, Divider, Row, ConfigProvider } from 'antd';
+import { Col, Row, ConfigProvider } from 'antd';
 import { useContext } from 'react';
-
+import Markdown from 'markdown-to-jsx';
 /** The `TitleField` is the template to use to render the title of a field
  *
  * @param props - The `TitleFieldProps` for this component
@@ -46,7 +46,12 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
       onClick={handleLabelClick}
       title={typeof title === 'string' ? title : ''}
     >
-      {labelChildren}
+      {/* [CUSTOM]: 增加 markdown 能力 */}
+      {typeof labelChildren === 'string' ? (
+        <Markdown options={{ disableParsingRawHTML: true }}>{labelChildren}</Markdown>
+      ) : (
+        labelChildren
+      )}
     </label>
   ) : null;
   if (optionalDataControl) {
@@ -58,10 +63,5 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     );
   }
 
-  return (
-    <>
-      {heading}
-      <Divider size='small' style={{ marginBlock: '1px' /* pull the margin right up against the label */ }} />
-    </>
-  );
+  return <>{heading}</>;
 }

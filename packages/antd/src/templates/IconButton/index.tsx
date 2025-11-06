@@ -18,7 +18,7 @@ export type AntdIconButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
-> = IconButtonProps<T, S, F> & Pick<ButtonProps, 'block' | 'danger' | 'size'>;
+> = IconButtonProps<T, S, F> & Pick<ButtonProps, 'block' | 'danger' | 'size' | 'variant' | 'ghost'>;
 
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: AntdIconButtonProps<T, S, F>,
@@ -31,7 +31,7 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
       type={iconType}
       icon={icon}
       color={color as ButtonProps['color']}
-      style={{ paddingTop: '4px' /* Center the button */ }}
+      // style={{ paddingTop: '4px' /* Center the button */ }}
       {...otherProps}
     />
   );
@@ -44,13 +44,19 @@ export function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
     registry: { translateString },
   } = props;
   return (
+    // [CUSTOM]: 自定义样式
     <IconButton
       title={translateString(TranslatableString.AddItemButton)}
-      iconType='primary'
-      block
+      // iconType='primary'
+      // iconType='default'
+      // block
+      variant={'filled'}
       {...props}
       icon={<PlusCircleOutlined />}
-    />
+      color='default'
+    >
+      {translateString(TranslatableString.AddItemButton)}
+    </IconButton>
   );
 }
 
@@ -98,6 +104,7 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       block={!!options.block}
       iconType='primary'
       {...props}
+      ghost
       icon={<DeleteOutlined />}
     />
   );

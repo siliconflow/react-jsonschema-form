@@ -10,6 +10,7 @@ import {
 
 const BTN_GRP_STYLE = {
   width: '100%',
+  gap: '8px',
 };
 
 const BTN_STYLE = {
@@ -33,13 +34,15 @@ export default function ArrayFieldItemTemplate<
     uiOptions,
   );
   const { rowGutter = 24, toolbarAlign = 'top' } = registry.formContext;
+  // [CUSTOM]: 自定义 hasToolbar 展示逻辑
+  const _hasToolbar = hasToolbar && !props.disabled && !props.readonly;
 
   return (
     <Row align={toolbarAlign} key={`rjsf-array-item-${index}`} gutter={rowGutter}>
       <Col flex='1'>{children}</Col>
 
-      {hasToolbar && (
-        <Col flex='192px'>
+      {_hasToolbar && (
+        <Col className='absolute right-0'>
           <Space.Compact style={BTN_GRP_STYLE}>
             <ArrayFieldItemButtonsTemplate {...buttonsProps} style={BTN_STYLE} />
           </Space.Compact>

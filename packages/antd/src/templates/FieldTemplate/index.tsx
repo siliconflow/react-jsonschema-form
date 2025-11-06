@@ -8,6 +8,7 @@ import {
   getUiOptions,
   GenericObjectType,
 } from '@rjsf/utils';
+import Markdown from 'markdown-to-jsx';
 
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
@@ -67,6 +68,9 @@ export default function FieldTemplate<
     return <div className='rjsf-field-hidden'>{children}</div>;
   }
 
+  // [CUSTOM]: 隐藏制定类型的 description
+  const _hideDescription = schema.type === 'array' || schema.type === 'object';
+
   // check to see if there is rawDescription(string) before using description(ReactNode)
   // to prevent showing a blank description area
   const descriptionNode = rawDescription ? description : undefined;
@@ -77,9 +81,15 @@ export default function FieldTemplate<
       break;
     case 'below':
     default:
-      descriptionProps.extra = descriptionNode;
+      // descriptionProps.extra = descriptionNode;
+      descriptionProps.extra = _hideDescription ? undefined : descriptionNode;
       break;
   }
+
+  // [CUSTOM]: 增加 markdown 能力
+  const labelNode =
+    typeof label === 'string' ? <Markdown options={{ disableParsingRawHTML: true }}>{label}</Markdown> : label;
+
   const isCheckbox = uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate
@@ -102,7 +112,7 @@ export default function FieldTemplate<
         hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
         help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
         htmlFor={id}
-        label={displayLabel && !isCheckbox && label}
+        label={displayLabel && !isCheckbox && labelNode}
         labelCol={labelCol}
         required={required}
         style={wrapperStyle}

@@ -634,7 +634,8 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
       defaults = rawFormData as typeof defaults;
     } else {
       const itemDefaults = rawFormData.map((item: T, idx: number) => {
-        return computeDefaults<T, S, F>(validator, schemaItem, {
+        const _schemaItem = deepRetrieveSchema(schemaItem, rootSchema, rawFormData[idx], validator as ValidatorType);
+        return computeDefaults<T, S, F>(validator, _schemaItem as S, {
           rootSchema,
           _recurseList,
           experimental_defaultFormStateBehavior,
@@ -732,6 +733,28 @@ export function getDefaultBasedOnSchemaType<
   }
 }
 
+const deepRetrieveSchema = (schema: RJSFSchema, rootSchema: RJSFSchema, formData: any, validator: ValidatorType) => {
+  if (!schema.properties) {
+    return schema;
+  }
+
+  // 先处理本层
+  const _schema = retrieveSchema(validator, schema as RJSFSchema, rootSchema, formData);
+  const propertiesKeys = Object.keys(_schema.properties || {});
+  const updatedSchemaWithProperties: Record<string, RJSFSchema> = {};
+  // 再处理子孙层
+  propertiesKeys.forEach((propertyKey) => {
+    const propertyFormData = formData?.[propertyKey];
+    updatedSchemaWithProperties[propertyKey] = deepRetrieveSchema(
+      _schema.properties?.[propertyKey] as RJSFSchema,
+      rootSchema,
+      propertyFormData,
+      validator,
+    );
+  });
+  return { ..._schema, properties: updatedSchemaWithProperties };
+};
+
 /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
  * computed to have defaults provided in the `schema`.
  *
@@ -764,12 +787,13 @@ export default function getDefaultFormState<
   if (!isObject(theSchema)) {
     throw new Error('Invalid schema: ' + theSchema);
   }
-  const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, formData, experimental_customMergeAllOf);
+  // 特殊修改, 这里递归检索schema下面的所有子孙properties, 只有在无法根据条件及formdata计算出更深的schema时才会退出
+  const schema = deepRetrieveSchema(theSchema, rootSchema as RJSFSchema, formData, validator as ValidatorType);
 
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.
-  const defaults = computeDefaults<T, S, F>(validator, schema, {
+  const defaults = computeDefaults<T, S, F>(validator, schema as S, {
     rootSchema,
     includeUndefinedValues,
     experimental_defaultFormStateBehavior,

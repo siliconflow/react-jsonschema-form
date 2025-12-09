@@ -88,7 +88,7 @@ export default function FieldTemplate<
 
   // [CUSTOM]: 增加 markdown 能力
   const labelNode =
-    typeof label === 'string' ? <Markdown options={{ disableParsingRawHTML: true }}>{label}</Markdown> : label;
+    typeof label === 'string' ? <Markdown options={{ disableParsingRawHTML: true, overrides: { a: { props: { target: '_blank' }}} }}>{label}</Markdown> : label;
 
   const isCheckbox = uiOptions.widget === 'checkbox';
   return (

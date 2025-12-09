@@ -48,7 +48,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     >
       {/* [CUSTOM]: 增加 markdown 能力 */}
       {typeof labelChildren === 'string' ? (
-        <Markdown options={{ disableParsingRawHTML: true }}>{labelChildren}</Markdown>
+        <Markdown options={{ disableParsingRawHTML: true, overrides: { a: { props: { target: '_blank' }}} }}>{labelChildren}</Markdown>
       ) : (
         labelChildren
       )}

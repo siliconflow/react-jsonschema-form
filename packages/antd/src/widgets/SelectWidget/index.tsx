@@ -12,6 +12,7 @@ import {
 import isString from 'lodash/isString';
 import { DefaultOptionType } from 'antd/es/select';
 import { useMemo } from 'react';
+import Markdown from 'markdown-to-jsx';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -90,23 +91,44 @@ export default function SelectWidget<
     return undefined;
   }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption]);
 
+  const descriptions = useMemo(() => {
+    try {
+      if (typeof selectedIndexes === 'string') {
+        const index = +selectedIndexes;
+
+        return enumOptions?.[index].schema?.description;
+      }
+    } catch (err) {}
+
+    return '';
+  }, [enumOptions, selectedIndexes]);
+
   return (
-    <Select
-      autoFocus={autofocus}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
-      getPopupContainer={getPopupContainer}
-      id={id}
-      mode={multiple ? 'multiple' : undefined}
-      onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
-      placeholder={placeholder}
-      style={SELECT_STYLE}
-      value={selectedIndexes}
-      {...extraProps}
-      filterOption={filterOption}
-      aria-describedby={ariaDescribedByIds(id)}
-      options={selectOptions}
-    />
+    <>
+      <Select
+        autoFocus={autofocus}
+        disabled={disabled || (readonlyAsDisabled && readonly)}
+        getPopupContainer={getPopupContainer}
+        id={id}
+        mode={multiple ? 'multiple' : undefined}
+        onBlur={!readonly ? handleBlur : undefined}
+        onChange={!readonly ? handleChange : undefined}
+        onFocus={!readonly ? handleFocus : undefined}
+        placeholder={placeholder}
+        style={SELECT_STYLE}
+        value={selectedIndexes}
+        {...extraProps}
+        filterOption={filterOption}
+        aria-describedby={ariaDescribedByIds(id)}
+        options={selectOptions}
+      />
+      {typeof descriptions === 'string' && descriptions && (
+        <div style={{ paddingTop: 6 }}>
+          <Markdown options={{ disableParsingRawHTML: true, overrides: { a: { props: { target: '_blank' } } } }}>
+            {descriptions}
+          </Markdown>
+        </div>
+      )}
+    </>
   );
 }

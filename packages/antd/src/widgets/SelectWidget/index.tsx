@@ -8,11 +8,13 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
+  getTemplate,
+  getUiOptions,
+  descriptionId
 } from '@rjsf/utils';
 import isString from 'lodash/isString';
 import { DefaultOptionType } from 'antd/es/select';
 import { useMemo } from 'react';
-import Markdown from 'markdown-to-jsx';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -42,11 +44,15 @@ export default function SelectWidget<
   readonly,
   value,
   schema,
+  uiSchema
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue } = options;
+
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>('DescriptionFieldTemplate', registry, uiOptions);
 
   const handleChange = (nextValue: any) => onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
@@ -124,9 +130,13 @@ export default function SelectWidget<
       />
       {typeof descriptions === 'string' && descriptions && (
         <div style={{ paddingTop: 6 }}>
-          <Markdown options={{ disableParsingRawHTML: true, overrides: { a: { props: { target: '_blank' } } } }}>
-            {descriptions}
-          </Markdown>
+          <DescriptionFieldTemplate
+              id={descriptionId(id)}
+              description={descriptions}
+              schema={schema}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
         </div>
       )}
     </>

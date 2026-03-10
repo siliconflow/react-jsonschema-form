@@ -9,6 +9,9 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
+  getTemplate,
+  getUiOptions,
+  descriptionId,
 } from '@rjsf/utils';
 import isString from 'lodash/isString';
 import { DefaultOptionType } from 'antd/es/select';
@@ -41,12 +44,20 @@ export default function SelectWidget<
   readonly,
   value,
   schema,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
   const [open, setOpen] = useState(false);
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue } = options;
+
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    uiOptions,
+  );
 
   const handleChange = (nextValue: any) => onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
 
@@ -91,27 +102,53 @@ export default function SelectWidget<
     return undefined;
   }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption]);
 
+  const descriptions = useMemo(() => {
+    try {
+      if (typeof selectedIndexes === 'string') {
+        const index = +selectedIndexes;
+
+        return enumOptions?.[index].schema?.description;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-empty
+    } catch (_) {}
+
+    return '';
+  }, [enumOptions, selectedIndexes]);
+
   return (
-    <Select
-      open={open}
-      autoFocus={autofocus}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
-      getPopupContainer={getPopupContainer}
-      id={id}
-      mode={multiple ? 'multiple' : undefined}
-      onBlur={!readonly ? handleBlur : undefined}
-      onChange={!readonly ? handleChange : undefined}
-      onFocus={!readonly ? handleFocus : undefined}
-      placeholder={placeholder}
-      style={SELECT_STYLE}
-      value={selectedIndexes}
-      {...extraProps}
-      // When the open change is called, set the open state, needed so that the select opens properly in the playground
-      onOpenChange={setOpen}
-      filterOption={filterOption}
-      aria-describedby={ariaDescribedByIds(id)}
-      options={selectOptions}
-    />
+    <>
+      <Select
+        open={open}
+        autoFocus={autofocus}
+        disabled={disabled || (readonlyAsDisabled && readonly)}
+        getPopupContainer={getPopupContainer}
+        id={id}
+        mode={multiple ? 'multiple' : undefined}
+        onBlur={!readonly ? handleBlur : undefined}
+        onChange={!readonly ? handleChange : undefined}
+        onFocus={!readonly ? handleFocus : undefined}
+        placeholder={placeholder}
+        style={SELECT_STYLE}
+        value={selectedIndexes}
+        {...extraProps}
+        // When the open change is called, set the open state, needed so that the select opens properly in the playground
+        onOpenChange={setOpen}
+        filterOption={filterOption}
+        aria-describedby={ariaDescribedByIds(id)}
+        options={selectOptions}
+      />
+      {typeof descriptions === 'string' && descriptions && (
+        <div style={{ paddingTop: 6 }}>
+          <DescriptionFieldTemplate
+            id={descriptionId(id)}
+            description={descriptions}
+            schema={schema}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        </div>
+      )}
+    </>
   );
 }
 

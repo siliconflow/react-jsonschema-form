@@ -68,7 +68,8 @@ export default function BaseInputTemplate<
     },
     [onChange, options.emptyValue],
   );
-
+  // [CUSTOM]:InputNumber 不建议使用 type
+  const { type: _type, ...inputPropsRest } = inputProps;
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (
       <InputNumber
@@ -81,7 +82,7 @@ export default function BaseInputTemplate<
         placeholder={placeholder}
         style={INPUT_STYLE}
         list={schema.examples ? examplesId(id) : undefined}
-        {...inputProps}
+        {...inputPropsRest}
         value={value}
         aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />

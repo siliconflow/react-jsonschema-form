@@ -815,6 +815,45 @@ export default function getDefaultFormState<
       defaultSupercedesUndefined,
       true, // set to true to override formData with defaults if they exist.
     );
+    // 强制覆盖 readOnly + const 字段，并递归处理嵌套对象
+    // eslint-disable-next-line no-inner-declarations
+    function forceOverrideReadOnlyConst(obj: GenericObjectType, schema: S) {
+      if (!isObject(obj) || !schema.properties) {
+        return;
+      }
+
+      const props = schema.properties as GenericObjectType;
+      Object.keys(props).forEach((key) => {
+        const propSchema = props[key] as S;
+        if (propSchema && propSchema.readOnly && propSchema[CONST_KEY] !== undefined) {
+          // readOnly + const: 强制覆盖为 const 值
+          obj[key] = propSchema[CONST_KEY];
+        }
+        // 递归处理嵌套对象
+        if (isObject(obj[key]) && propSchema?.properties) {
+          forceOverrideReadOnlyConst(obj[key] as GenericObjectType, propSchema);
+        }
+      });
+    }
+    forceOverrideReadOnlyConst(result as GenericObjectType, schema);
+    // 递归清理不在 schema.properties 中的旧字段（dependencies 切换时会隐藏字段）
+    // function cleanOldFields(obj: GenericObjectType, schema: S) {
+    //   if (!isObject(obj) || !schema.properties) return;
+
+    //   const props = schema.properties as GenericObjectType;
+    //   // 如果 schema 配置了 additionalProperties，则允许动态添加的字段
+    //   const hasAdditionalProperties = schema.additionalProperties === true || isObject(schema.additionalProperties);
+    //   Object.keys(obj).forEach((key) => {
+    //     if (!props[key] && !hasAdditionalProperties) {
+    //       // 字段在 schema 中不存在且不允许额外属性时，删除
+    //       delete obj[key];
+    //     } else if (isObject(obj[key]) && props[key]?.properties) {
+    //       // 递归清理嵌套对象
+    //       cleanOldFields(obj[key] as GenericObjectType, props[key] as S);
+    //     }
+    //   });
+    // }
+    // cleanOldFields(result as GenericObjectType, schema);
     return result;
   }
 

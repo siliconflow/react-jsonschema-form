@@ -15,6 +15,7 @@ const BTN_GRP_STYLE = {
 
 const BTN_STYLE = {
   width: 'calc(100% / 4)',
+  gap: '8px',
 };
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
@@ -34,13 +35,15 @@ export default function ArrayFieldItemTemplate<
     uiOptions,
   );
   const { rowGutter = 24, toolbarAlign = displayLabel ? 'middle' : 'top' } = registry.formContext;
+  // [CUSTOM]: 自定义 hasToolbar 展示逻辑
+  const _hasToolbar = hasToolbar && !props.disabled && !props.readonly;
   const margin = hasDescription ? -8 : 16;
 
   return (
     <Row align={toolbarAlign} key={`rjsf-array-item-${index}`} gutter={rowGutter}>
       <Col flex='1'>{children}</Col>
-      {hasToolbar && (
-        <Col flex='120px' style={{ marginTop: displayLabel ? `${margin}px` : undefined }}>
+      {_hasToolbar && (
+        <Col className='absolute right-0' style={{ marginTop: displayLabel ? `${margin}px` : undefined }}>
           <Space.Compact style={BTN_GRP_STYLE}>
             <ArrayFieldItemButtonsTemplate {...buttonsProps} style={BTN_STYLE} />
           </Space.Compact>

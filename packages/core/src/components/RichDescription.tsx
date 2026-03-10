@@ -39,7 +39,10 @@ export default function RichDescription<
 
   if (uiOptions.enableMarkdownInDescription && typeof description === 'string') {
     return (
-      <Markdown options={{ disableParsingRawHTML: true }} data-testid={TEST_IDS.markdown}>
+      <Markdown
+        options={{ disableParsingRawHTML: true, overrides: { a: { props: { target: '_blank' } } } }}
+        data-testid={TEST_IDS.markdown}
+      >
         {description}
       </Markdown>
     );

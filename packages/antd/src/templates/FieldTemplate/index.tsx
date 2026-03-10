@@ -7,6 +7,7 @@ import {
   getTemplate,
   getUiOptions,
   GenericObjectType,
+  descriptionId,
 } from '@rjsf/utils';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -49,7 +50,11 @@ export default function FieldTemplate<
   } = formContext as GenericObjectType;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    uiOptions,
+  );
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
@@ -59,7 +64,8 @@ export default function FieldTemplate<
   if (hidden) {
     return <div className='rjsf-field-hidden'>{children}</div>;
   }
-
+  // [CUSTOM]: 隐藏制定类型的 description
+  const _hideDescription = schema.type === 'array' || schema.type === 'object';
   // check to see if there is rawDescription(string) before using description(ReactNode)
   // to prevent showing a blank description area
   const descriptionNode = rawDescription ? description : undefined;
@@ -69,10 +75,26 @@ export default function FieldTemplate<
       descriptionProps.tooltip = descriptionNode;
       break;
     case 'below':
-    default:
       descriptionProps.extra = descriptionNode;
       break;
+    default:
+      descriptionProps.extra = _hideDescription ? undefined : descriptionNode;
+      break;
   }
+
+  // [CUSTOM]: 增加 markdown 能力
+  const labelNode =
+    typeof label === 'string' ? (
+      <DescriptionFieldTemplate
+        id={descriptionId(id)}
+        description={label}
+        schema={schema}
+        uiSchema={uiSchema}
+        registry={registry}
+      />
+    ) : (
+      label
+    );
   const isCheckbox = uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate {...props}>
@@ -81,7 +103,7 @@ export default function FieldTemplate<
         hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
         help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
         htmlFor={id}
-        label={displayLabel && !isCheckbox && label}
+        label={displayLabel && !isCheckbox && labelNode}
         labelCol={labelCol}
         required={required}
         style={wrapperStyle}

@@ -4,7 +4,7 @@ import Divider from '@mui/material/Divider';
 import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
 import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
 import { isFunction } from 'lodash';
-
+// import sanitizeDataForNewSchema from '@rjsf/utils/schema/sanitizeDataForNewSchema';
 import { samples } from '../samples';
 import DemoFrame from './DemoFrame';
 import ErrorBoundary from './ErrorBoundary';
@@ -16,7 +16,8 @@ import Editors from './Editors';
 import SpecialInput from './SpecialInput';
 import { Sample, UiSchemaForTheme } from '../samples/Sample';
 import base64 from '../utils/base64';
-
+import mergeAllOf from 'json-schema-merge-allof';
+import type { Options } from 'json-schema-merge-allof';
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
   validators: { [validatorName: string]: ValidatorType };
@@ -238,6 +239,20 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 onFocus={(id: string, value: string) => console.log(`Focused ${id} with value ${value}`)}
                 onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
                 ref={playGroundFormRef}
+                experimental_defaultFormStateBehavior={{
+                  constAsDefaults: 'always',
+                  allOf: 'populateDefaults',
+                  emptyObjectFields: 'populateAllDefaults',
+                }}
+                experimental_customMergeAllOf={(schema: any): any => {
+                  try {
+                    // 复原 v5 逻辑
+                    return mergeAllOf(schema, { deep: false } as Options);
+                  } catch (e) {
+                    console.warn('mergeAllOf failed:', e);
+                    return schema; // 失败时回退
+                  }
+                }}
               />
             </DemoFrame>
           )}

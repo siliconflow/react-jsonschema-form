@@ -1,6 +1,14 @@
 import classNames from 'classnames';
-import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { Col, Divider, Row, ConfigProvider } from 'antd';
+import {
+  FormContextType,
+  TitleFieldProps,
+  RJSFSchema,
+  StrictRJSFSchema,
+  getTemplate,
+  getUiOptions,
+  descriptionId,
+} from '@rjsf/utils';
+import { Col, Row, ConfigProvider } from 'antd';
 import { useContext } from 'react';
 
 /** The `TitleField` is the template to use to render the title of a field
@@ -13,9 +21,18 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   registry,
   title,
   optionalDataControl,
+  schema,
+  uiSchema,
 }: TitleFieldProps<T, S, F>) {
   const { formContext } = registry;
   const { colon = true } = formContext;
+
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    uiOptions,
+  );
 
   let labelChildren = title;
   if (colon && typeof title === 'string' && title.trim() !== '') {
@@ -46,7 +63,17 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
       onClick={handleLabelClick}
       title={typeof title === 'string' ? title : ''}
     >
-      {labelChildren}
+      {typeof labelChildren === 'string' ? (
+        <DescriptionFieldTemplate
+          id={descriptionId(id)}
+          description={labelChildren}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      ) : (
+        labelChildren
+      )}
     </label>
   ) : null;
   if (optionalDataControl) {
@@ -58,10 +85,5 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     );
   }
 
-  return (
-    <>
-      {heading}
-      <Divider size='small' style={{ marginBlock: '1px' /* pull the margin right up against the label */ }} />
-    </>
-  );
+  return <>{heading}</>;
 }

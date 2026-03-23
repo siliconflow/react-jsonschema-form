@@ -27,23 +27,25 @@ export default function ArrayFieldItemTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
-  const { children, buttonsProps, displayLabel, hasDescription, hasToolbar, index, registry, uiSchema } = props;
+  const { children, buttonsProps, hasToolbar, index, registry, uiSchema } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
     registry,
     uiOptions,
   );
-  const { rowGutter = 24, toolbarAlign = displayLabel ? 'middle' : 'top' } = registry.formContext;
+  //  toolbarAlign = displayLabel ? 'middle' : 'top'
+  const { rowGutter = 24 } = registry.formContext;
   // [CUSTOM]: 自定义 hasToolbar 展示逻辑
   const _hasToolbar = hasToolbar && !props.disabled && !props.readonly;
-  const margin = hasDescription ? -8 : 16;
+  // const margin = hasDescription ? -8 : 16;
 
   return (
-    <Row align={toolbarAlign} key={`rjsf-array-item-${index}`} gutter={rowGutter}>
+    <Row align={'top'} key={`rjsf-array-item-${index}`} gutter={rowGutter}>
       <Col flex='1'>{children}</Col>
       {_hasToolbar && (
-        <Col className='absolute right-0' style={{ marginTop: displayLabel ? `${margin}px` : undefined }}>
+        // style={{ marginTop: displayLabel ? `${margin}px` : undefined }}
+        <Col className='absolute right-0 top-0'>
           <Space.Compact style={BTN_GRP_STYLE}>
             <ArrayFieldItemButtonsTemplate {...buttonsProps} style={BTN_STYLE} />
           </Space.Compact>

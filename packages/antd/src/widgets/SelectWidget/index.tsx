@@ -117,6 +117,17 @@ export default function SelectWidget<
 
   return (
     <>
+      {typeof descriptions === 'string' && descriptions && (
+        <div style={{ paddingBottom: 6 }}>
+          <DescriptionFieldTemplate
+            id={descriptionId(id)}
+            description={descriptions}
+            schema={schema}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        </div>
+      )}
       <Select
         open={open}
         autoFocus={autofocus}
@@ -137,17 +148,6 @@ export default function SelectWidget<
         aria-describedby={ariaDescribedByIds(id)}
         options={selectOptions}
       />
-      {typeof descriptions === 'string' && descriptions && (
-        <div style={{ paddingTop: 6 }}>
-          <DescriptionFieldTemplate
-            id={descriptionId(id)}
-            description={descriptions}
-            schema={schema}
-            uiSchema={uiSchema}
-            registry={registry}
-          />
-        </div>
-      )}
     </>
   );
 }

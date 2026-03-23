@@ -39,6 +39,7 @@ export default function FieldTemplate<
     required,
     schema,
     uiSchema,
+    fieldPathId,
   } = props;
   const { formContext } = registry;
   const {
@@ -82,37 +83,66 @@ export default function FieldTemplate<
       break;
   }
 
-  // [CUSTOM]: 增加 markdown 能力
-  const labelNode =
-    typeof label === 'string' ? (
-      <DescriptionFieldTemplate
-        id={descriptionId(id)}
-        description={label}
-        schema={schema}
-        uiSchema={uiSchema}
-        registry={registry}
-      />
+  // [CUSTOM] label 样式
+  const labelStyle: React.CSSProperties = {
+    color: '#334155',
+    fontFamily: 'Inter',
+    fontSize: '14px',
+    fontStyle: 'normal',
+    fontWeight: 500,
+    lineHeight: '24px',
+  };
+
+  // 将 description 整合到 label 中，显示在控件上方
+  // 修复：增加 line-height 使 label 自适应高度，避免 32px 限制；处理 required 与 description 共存
+  const labelWithDescription =
+    rawDescription && !_hideDescription ? (
+      <div style={{ lineHeight: 'normal' }}>
+        <div style={{ display: 'inline', ...labelStyle }}>
+          {required && (
+            <span style={_hideDescription ? {} : { color: '#ff4d4f', marginLeft: '2px', fontFamily: 'SimSun' }}>*</span>
+          )}{' '}
+          {label}
+        </div>
+        <div style={{ marginTop: '2px' }}>
+          <DescriptionFieldTemplate
+            id={descriptionId(id) + '_inline'}
+            description={rawDescription}
+            schema={schema}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        </div>
+      </div>
     ) : (
-      label
+      <span style={labelStyle}>{label}</span>
     );
   const isCheckbox = uiOptions.widget === 'checkbox';
+  // [CUSTOM]: 只在顶级层级（非嵌套）且 type 不是 array 或 object 时显示虚线 border
+  const isTopLevelField = fieldPathId.path.length === 1;
+  const showBorder = isTopLevelField && !_hideDescription;
+  let _displayLabel = displayLabel;
+  if (schema.type === 'boolean') {
+    _displayLabel = true;
+  }
   return (
-    <WrapIfAdditionalTemplate {...props}>
-      <Form.Item
-        colon={colon}
-        hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-        help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
-        htmlFor={id}
-        label={displayLabel && !isCheckbox && labelNode}
-        labelCol={labelCol}
-        required={required}
-        style={wrapperStyle}
-        validateStatus={rawErrors?.length ? 'error' : undefined}
-        wrapperCol={wrapperCol}
-        {...descriptionProps}
-      >
-        {children}
-      </Form.Item>
-    </WrapIfAdditionalTemplate>
+    <div style={showBorder ? { borderLeft: '1px dashed #CBD5E1', paddingLeft: '16px' } : undefined}>
+      <WrapIfAdditionalTemplate {...props}>
+        <Form.Item
+          colon={colon}
+          hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
+          help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
+          htmlFor={schema.type === 'boolean' ? undefined : id}
+          label={_displayLabel && !isCheckbox && labelWithDescription}
+          labelCol={labelCol}
+          required={rawDescription && !_hideDescription ? false : required}
+          style={wrapperStyle}
+          validateStatus={rawErrors?.length ? 'error' : undefined}
+          wrapperCol={wrapperCol}
+        >
+          {children}
+        </Form.Item>
+      </WrapIfAdditionalTemplate>
+    </div>
   );
 }

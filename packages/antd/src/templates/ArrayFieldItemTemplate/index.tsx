@@ -45,7 +45,7 @@ export default function ArrayFieldItemTemplate<
       <Col flex='1'>{children}</Col>
       {_hasToolbar && (
         // style={{ marginTop: displayLabel ? `${margin}px` : undefined }}
-        <Col className='absolute right-0 top-0'>
+        <Col className='right-0 top-0'>
           <Space.Compact style={BTN_GRP_STYLE}>
             <ArrayFieldItemButtonsTemplate {...buttonsProps} style={BTN_STYLE} />
           </Space.Compact>

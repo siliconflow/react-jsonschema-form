@@ -97,7 +97,7 @@ export default function FieldTemplate<
   // 修复：增加 line-height 使 label 自适应高度，避免 32px 限制；处理 required 与 description 共存
   const labelWithDescription =
     rawDescription && !_hideDescription ? (
-      <div style={{ lineHeight: 'normal' }}>
+      <div style={{ lineHeight: 'normal', minWidth: 0 }}>
         <div style={{ display: 'inline', ...labelStyle }}>
           {required && (
             <span style={_hideDescription ? {} : { color: '#ff4d4f', marginLeft: '2px', fontFamily: 'SimSun' }}>*</span>

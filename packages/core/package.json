@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/core",
-  "version": "6.99.99-fork.4",
+  "version": "6.99.99-fork.5",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
@@ -66,7 +66,7 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^6.99.99-fork.4",
+    "@rjsf/utils": "6.99.99-fork.5",
     "react": ">=18"
   },
   "dependencies": {

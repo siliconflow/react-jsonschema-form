@@ -112,7 +112,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          recurseList,
+          [...recurseList],
           experimental_customMergeAllOf,
         ),
       );
@@ -125,7 +125,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          recurseList,
+          [...recurseList],
           experimental_customMergeAllOf,
         ),
       );
@@ -140,7 +140,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           formData,
           expandAllBranches,
-          recurseList,
+          [...recurseList],
           experimental_customMergeAllOf,
         ),
       );
@@ -156,7 +156,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       rootSchema,
       formData,
       expandAllBranches,
-      recurseList,
+      [...recurseList],
       experimental_customMergeAllOf,
     ),
   );
